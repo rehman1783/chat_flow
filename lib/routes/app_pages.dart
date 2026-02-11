@@ -1,10 +1,19 @@
+import 'package:chat_flow/controllers/chat_screen_controller.dart';
+import 'package:chat_flow/controllers/login_screen_controller.dart';
+import 'package:chat_flow/controllers/main_screen_controller.dart';
+import 'package:chat_flow/controllers/profile_screen_controller.dart';
+import 'package:chat_flow/controllers/register_screen_controller.dart';
+import 'package:chat_flow/controllers/settings_screen_controller.dart';
+import 'package:chat_flow/controllers/splash_screen_controller.dart';
 import 'package:chat_flow/routes/app_routes.dart';
 import 'package:chat_flow/views/auth/login_screen.dart';
 import 'package:chat_flow/views/auth/register_screen.dart';
-import 'package:chat_flow/views/home_screen.dart';
+import 'package:chat_flow/views/chat_screen.dart';
+import 'package:chat_flow/views/main_screen.dart';
+import 'package:chat_flow/views/profile_screen.dart';
+import 'package:chat_flow/views/settings_screen.dart';
 import 'package:chat_flow/views/splash_screen.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
 class AppPages {
@@ -34,9 +43,9 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.home,
-      page: () => const HomeScreen(),
+      page: () => const MainScreen(),
       binding: BindingsBuilder(() {
-        Get.put(HomeScreenController());
+        Get.put(MainScreenController());
       }),
     ),
     GetPage(
