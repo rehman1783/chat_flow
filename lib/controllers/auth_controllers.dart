@@ -2,6 +2,7 @@ import 'package:chat_flow/models/user_model.dart';
 import 'package:chat_flow/routes/app_routes.dart';
 import 'package:chat_flow/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
@@ -29,19 +30,24 @@ class AuthController extends GetxController {
 
   // ================= AUTH STATE LISTENER =================
   void _handleAuthStateChange(User? user) {
-    if (user == null) {
-      if (Get.currentRoute != AppRoutes.login) {
-        Get.offAllNamed(AppRoutes.login);
-      }
-    } else {
-      if (Get.currentRoute != AppRoutes.home) {
-        Get.offAllNamed(AppRoutes.home);
-      }
-    }
-
     if (!_isinitialized.value) {
       _isinitialized.value = true;
     }
+
+    // Delay navigation until the widget tree is fully initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (user == null) {
+        if (Get.currentRoute != AppRoutes.login &&
+            Get.isRegistered<AuthController>()) {
+          Get.offAllNamed(AppRoutes.login);
+        }
+      } else {
+        if (Get.currentRoute != AppRoutes.home &&
+            Get.isRegistered<AuthController>()) {
+          Get.offAllNamed(AppRoutes.home);
+        }
+      }
+    });
   }
 
   // ================= INITIAL CHECK =================

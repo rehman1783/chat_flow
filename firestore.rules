@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow anyone to read their own user profile
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+      
+      // Friends subcollection
+      match /friends/{friendId} {
+        allow read, write: if request.auth.uid == userId;
+      }
+    }
+
+    // Allow users to see friend requests
+    match /friendRequests/{requestId} {
+      allow read: if request.auth.uid == resource.data.senderId || 
+                     request.auth.uid == resource.data.receiverId;
+      allow create: if request.auth.uid == request.resource.data.senderId;
+      allow update, delete: if request.auth.uid == resource.data.senderId || 
+                               request.auth.uid == resource.data.receiverId;
+    }
+
+    // Chat messages - only friends can read/write
+    match /chats/{chatId} {
+      allow read: if request.auth.uid == resource.data.user1Id || 
+                     request.auth.uid == resource.data.user2Id;
+      allow write: if request.auth.uid == resource.data.user1Id || 
+                      request.auth.uid == resource.data.user2Id;
+      
+      // Messages subcollection
+      match /messages/{messageId} {
+        allow read: if request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.user1Id ||
+                       request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.user2Id;
+        
+        allow create: if request.auth.uid == request.resource.data.senderId &&
+                        (request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.user1Id ||
+                         request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.user2Id);
+        
+        allow update, delete: if request.auth.uid == resource.data.senderId;
+      }
+    }
+  }
+}
