@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ChatModel {
   final String id;
   final String user1Id;
@@ -32,13 +34,24 @@ class ChatModel {
       'user2Name': user2Name,
       'user1PhotoUrl': user1PhotoUrl,
       'user2PhotoUrl': user2PhotoUrl,
-      'lastMessageTime': lastMessageTime.millisecondsSinceEpoch,
+      'lastMessageTime': lastMessageTime,
       'lastMessage': lastMessage,
       'senderId': senderId,
     };
   }
 
   static ChatModel fromMap(Map<String, dynamic> map) {
+    DateTime _parseDateTime(dynamic value) {
+      if (value is Timestamp) {
+        return value.toDate();
+      } else if (value is int) {
+        return DateTime.fromMillisecondsSinceEpoch(value);
+      } else if (value is String) {
+        return DateTime.parse(value);
+      }
+      return DateTime.now();
+    }
+
     return ChatModel(
       id: map['id'] ?? '',
       user1Id: map['user1Id'] ?? '',
@@ -47,9 +60,7 @@ class ChatModel {
       user2Name: map['user2Name'] ?? '',
       user1PhotoUrl: map['user1PhotoUrl'] ?? '',
       user2PhotoUrl: map['user2PhotoUrl'] ?? '',
-      lastMessageTime: DateTime.fromMillisecondsSinceEpoch(
-        map['lastMessageTime'] ?? 0,
-      ),
+      lastMessageTime: _parseDateTime(map['lastMessageTime']),
       lastMessage: map['lastMessage'] ?? '',
       senderId: map['senderId'] ?? '',
     );

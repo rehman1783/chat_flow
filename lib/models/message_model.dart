@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MessageModel {
   final String id;
   final String chatId;
@@ -26,24 +28,33 @@ class MessageModel {
       'senderId': senderId,
       'receiverId': receiverId,
       'content': content,
-      'timestamp': timestamp.millisecondsSinceEpoch,
+      'timestamp': timestamp,
       'isRead': isRead,
-      'editedAt': editedAt?.millisecondsSinceEpoch,
+      'editedAt': editedAt,
     };
   }
 
   static MessageModel fromMap(Map<String, dynamic> map) {
+    DateTime _parseDateTime(dynamic value) {
+      if (value is Timestamp) {
+        return value.toDate();
+      } else if (value is int) {
+        return DateTime.fromMillisecondsSinceEpoch(value);
+      } else if (value is String) {
+        return DateTime.parse(value);
+      }
+      return DateTime.now();
+    }
+
     return MessageModel(
       id: map['id'] ?? '',
       chatId: map['chatId'] ?? '',
       senderId: map['senderId'] ?? '',
       receiverId: map['receiverId'] ?? '',
       content: map['content'] ?? '',
-      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] ?? 0),
+      timestamp: _parseDateTime(map['timestamp']),
       isRead: map['isRead'] ?? false,
-      editedAt: map['editedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['editedAt'])
-          : null,
+      editedAt: map['editedAt'] != null ? _parseDateTime(map['editedAt']) : null,
     );
   }
 

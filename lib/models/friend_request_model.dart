@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class FriendRequestModel {
   final String id;
   final String senderId;
@@ -24,7 +26,7 @@ class FriendRequestModel {
       'id': id,
       'senderId': senderId,
       'receiverId': receiverId,
-      'timestamp': timestamp.millisecondsSinceEpoch,
+      'timestamp': timestamp,
       'status': status,
       'senderName': senderName,
       'senderEmail': senderEmail,
@@ -33,11 +35,22 @@ class FriendRequestModel {
   }
 
   static FriendRequestModel fromMap(Map<String, dynamic> map) {
+    DateTime _parseDateTime(dynamic value) {
+      if (value is Timestamp) {
+        return value.toDate();
+      } else if (value is int) {
+        return DateTime.fromMillisecondsSinceEpoch(value);
+      } else if (value is String) {
+        return DateTime.parse(value);
+      }
+      return DateTime.now();
+    }
+
     return FriendRequestModel(
       id: map['id'] ?? '',
       senderId: map['senderId'] ?? '',
       receiverId: map['receiverId'] ?? '',
-      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] ?? 0),
+      timestamp: _parseDateTime(map['timestamp']),
       status: map['status'] ?? 'pending',
       senderName: map['senderName'] ?? '',
       senderEmail: map['senderEmail'] ?? '',

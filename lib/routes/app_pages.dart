@@ -64,6 +64,9 @@ class AppPages {
       binding: BindingsBuilder(() {
         Get.put(MainScreenController());
         Get.put(NotificationController());
+        Get.put(FriendsController());
+        Get.put(FindFriendsController());
+        Get.put(ProfileScreenController());
       }),
     ),
     GetPage(
