@@ -54,7 +54,9 @@ class MessageModel {
       content: map['content'] ?? '',
       timestamp: _parseDateTime(map['timestamp']),
       isRead: map['isRead'] ?? false,
-      editedAt: map['editedAt'] != null ? _parseDateTime(map['editedAt']) : null,
+      editedAt: map['editedAt'] != null
+          ? _parseDateTime(map['editedAt'])
+          : null,
     );
   }
 
