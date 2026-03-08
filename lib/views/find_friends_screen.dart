@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chat_flow/controllers/find_friends_controller.dart';
 import 'package:chat_flow/theme/app_theme.dart';
+import 'package:chat_flow/routes/app_routes.dart';
 
 class FindFriendsScreen extends StatelessWidget {
   const FindFriendsScreen({super.key});
@@ -161,65 +162,65 @@ class FindFriendsScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Obx(
-                          () {
-                            final isFriend = controller.isFriend(user.id);
-                            final requestSent = controller.hasRequestSent(user.id);
-                            
-                            if (isFriend) {
-                              return Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () => Get.toNamed(
-                                      AppRoutes.chat,
-                                      parameters: {'userId': user.id},
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppTheme.primaryColor,
-                                      minimumSize: const Size(60, 36),
-                                    ),
-                                    child: const Icon(Icons.message, size: 18),
+                        Obx(() {
+                          final isFriend = controller.isFriend(user.id);
+                          final requestSent = controller.hasRequestSent(
+                            user.id,
+                          );
+
+                          if (isFriend) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () => Get.toNamed(
+                                    AppRoutes.chat,
+                                    parameters: {'userId': user.id},
                                   ),
-                                ],
-                              );
-                            } else if (requestSent) {
-                              return ElevatedButton(
-                                onPressed: null,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppTheme.textSecondaryColor
-                                      .withOpacity(0.3),
-                                  minimumSize: const Size(90, 36),
-                                ),
-                                child: const Text(
-                                  'Requested',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppTheme.textSecondaryColor,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppTheme.primaryColor,
+                                    minimumSize: const Size(60, 36),
                                   ),
+                                  child: const Icon(Icons.message, size: 18),
                                 ),
-                              );
-                            } else {
-                              return ElevatedButton(
-                                onPressed: () =>
-                                    controller.sendFriendRequest(user),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppTheme.primaryColor,
-                                  minimumSize: const Size(70, 36),
+                              ],
+                            );
+                          } else if (requestSent) {
+                            return ElevatedButton(
+                              onPressed: null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppTheme.textSecondaryColor
+                                    .withOpacity(0.3),
+                                minimumSize: const Size(90, 36),
+                              ),
+                              child: const Text(
+                                'Requested',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.textSecondaryColor,
                                 ),
-                                child: const Text(
-                                  'Add',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
+                              ),
+                            );
+                          } else {
+                            return ElevatedButton(
+                              onPressed: () =>
+                                  controller.sendFriendRequest(user),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppTheme.primaryColor,
+                                minimumSize: const Size(70, 36),
+                              ),
+                              child: const Text(
+                                'Add',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
                                 ),
-                              );
-                            }
-                          },
-                        ),
+                              ),
+                            );
+                          }
+                        }),
                       ],
                     ),
                   );

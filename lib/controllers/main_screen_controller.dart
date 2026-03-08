@@ -24,17 +24,20 @@ class MainScreenController extends GetxController {
     try {
       isLoading.value = true;
       if (currentUser != null) {
-        _firestoreService.getUserChatsStream(currentUser!.uid).listen((
-          chatList,
-        ) {
-          // Create a new list to trigger reactivity
-          chats.value = List.from(chatList);
-          isLoading.value = false;
-        }, onError: (error) {
-          this.error.value = error.toString();
-          isLoading.value = false;
-          print('Error loading chats: $error');
-        });
+        _firestoreService
+            .getUserChatsStream(currentUser!.uid)
+            .listen(
+              (chatList) {
+                // Create a new list to trigger reactivity
+                chats.value = List.from(chatList);
+                isLoading.value = false;
+              },
+              onError: (error) {
+                this.error.value = error.toString();
+                isLoading.value = false;
+                print('Error loading chats: $error');
+              },
+            );
       }
     } catch (e) {
       error.value = e.toString();

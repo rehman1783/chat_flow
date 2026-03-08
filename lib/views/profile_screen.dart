@@ -50,7 +50,7 @@ class ProfileScreen extends StatelessWidget {
                                 controller.displayName.value.isEmpty
                                     ? 'U'
                                     : controller.displayName.value[0]
-                                        .toUpperCase(),
+                                          .toUpperCase(),
                                 style: const TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,

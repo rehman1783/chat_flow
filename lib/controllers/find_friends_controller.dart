@@ -14,7 +14,8 @@ class FindFriendsController extends GetxController {
   final RxString searchQuery = ''.obs;
   final RxList<String> sentRequestIds = <String>[].obs;
   final RxList<String> friendIds = <String>[].obs;
-  final RxMap<String, String> requestStatus = <String, String>{}.obs; // userId -> status (pending/accepted/rejected)
+  final RxMap<String, String> requestStatus =
+      <String, String>{}.obs; // userId -> status (pending/accepted/rejected)
 
   User? get currentUser => _firebaseAuth.currentUser;
 
@@ -51,15 +52,15 @@ class FindFriendsController extends GetxController {
         currentUser!.uid,
       );
       sentRequestIds.value = sentRequests.map((req) => req.receiverId).toList();
-      
+
       // Track status of requests
       for (var req in sentRequests) {
         requestStatus[req.receiverId] = req.status;
       }
-      
+
       // Load received requests to check for accepted ones
-      final receivedRequests = 
-          await _firestoreService.getReceivedFriendRequests(currentUser!.uid);
+      final receivedRequests = await _firestoreService
+          .getReceivedFriendRequests(currentUser!.uid);
       for (var req in receivedRequests) {
         if (req.status == 'accepted') {
           friendIds.add(req.senderId);
