@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chat_flow/controllers/settings_screen_controller.dart';
 import 'package:chat_flow/controllers/profile_screen_controller.dart';
+import 'package:chat_flow/controllers/theme_controller.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -44,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     final profileController = Get.find<ProfileScreenController>();
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -57,6 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             tabs: [
               Tab(text: 'Edit Profile'),
               Tab(text: 'Security'),
+              Tab(text: 'Theme'),
             ],
           ),
         ),
@@ -173,6 +175,52 @@ class _SettingsScreenState extends State<SettingsScreen>
                             )
                           : const Text('Change Password'),
                     ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Theme Tab
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  Text(
+                    'App Theme',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  Obx(
+                    () {
+                      final themeController = Get.find<ThemeController>();
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Theme.of(context).dividerColor,
+                            width: 1,
+                          ),
+                        ),
+                        child: SwitchListTile(
+                          title: const Text('Dark Mode'),
+                          subtitle: Text(
+                            themeController.isDarkMode
+                                ? 'Dark theme enabled'
+                                : 'Light theme enabled',
+                          ),
+                          value: themeController.isDarkMode,
+                          onChanged: (value) {
+                            themeController.toggleTheme();
+                          },
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
