@@ -10,7 +10,14 @@ class FindFriendsScreen extends StatelessWidget {
     final controller = Get.find<FindFriendsController>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Find Friends'), centerTitle: true),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
+        title: const Text('Find Friends'),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
           Padding(

@@ -16,6 +16,10 @@ class ChatScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
         title: Obx(() => Text(controller.otherUser.displayName)),
         centerTitle: true,
       ),

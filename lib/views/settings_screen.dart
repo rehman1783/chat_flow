@@ -47,6 +47,10 @@ class _SettingsScreenState extends State<SettingsScreen>
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Get.back(),
+          ),
           title: const Text('Settings'),
           centerTitle: true,
           bottom: const TabBar(

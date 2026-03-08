@@ -11,7 +11,14 @@ class FriendsScreen extends StatelessWidget {
     final controller = Get.find<FriendsController>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Friends'), centerTitle: true),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
+        title: const Text('Friends'),
+        centerTitle: true,
+      ),
       body: RefreshIndicator(
         onRefresh: () => controller.refreshFriends(),
         child: Obx(() {

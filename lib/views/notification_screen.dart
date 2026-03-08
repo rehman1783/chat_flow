@@ -14,6 +14,10 @@ class NotificationScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Get.back(),
+          ),
           title: const Text(
             'Friend Requests',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
