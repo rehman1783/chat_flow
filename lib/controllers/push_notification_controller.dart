@@ -34,22 +34,24 @@ class PushNotificationController extends GetxController {
     if (currentUserId == null) return;
 
     // Listen to all messages where current user is receiver
-    _firestoreService.getAllMessagesStream(currentUserId).listen(
-      (messages) {
-        for (final message in messages) {
-          // Check if message is unread and from a new sender
-          if (!message.isRead &&
-              message.receiverId == currentUserId &&
-              !notifiedUsers.contains(message.senderId)) {
-            _showMessageNotification(message);
-            notifiedUsers.add(message.senderId);
-          }
-        }
-      },
-      onError: (error) {
-        print('Error listening to messages: $error');
-      },
-    );
+    _firestoreService
+        .getAllMessagesStream(currentUserId)
+        .listen(
+          (messages) {
+            for (final message in messages) {
+              // Check if message is unread and from a new sender
+              if (!message.isRead &&
+                  message.receiverId == currentUserId &&
+                  !notifiedUsers.contains(message.senderId)) {
+                _showMessageNotification(message);
+                notifiedUsers.add(message.senderId);
+              }
+            }
+          },
+          onError: (error) {
+            print('Error listening to messages: $error');
+          },
+        );
   }
 
   void _showMessageNotification(MessageModel message) {

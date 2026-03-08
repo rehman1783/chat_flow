@@ -18,9 +18,7 @@ class ChatListScreen extends StatelessWidget {
       child: Obx(() {
         if (controller.isLoading.value) {
           return const Center(
-            child: CircularProgressIndicator(
-              color: AppTheme.primaryColor,
-            ),
+            child: CircularProgressIndicator(color: AppTheme.primaryColor),
           );
         }
 
@@ -73,11 +71,8 @@ class ChatListScreen extends StatelessWidget {
 
         return ListView.separated(
           itemCount: controller.chats.length,
-          separatorBuilder: (context, index) => Divider(
-            height: 1,
-            color: AppTheme.borderColor,
-            indent: 76,
-          ),
+          separatorBuilder: (context, index) =>
+              Divider(height: 1, color: AppTheme.borderColor, indent: 76),
           itemBuilder: (context, index) {
             final chat = controller.chats[index];
             final otherUserId =
@@ -87,9 +82,9 @@ class ChatListScreen extends StatelessWidget {
                 : chat.user1Id;
             final otherUserName =
                 chat.user1Id ==
-                        Get.find<MainScreenController>().currentUser?.uid
-                    ? chat.user2Name
-                    : chat.user1Name;
+                    Get.find<MainScreenController>().currentUser?.uid
+                ? chat.user2Name
+                : chat.user1Name;
             final otherUserInitial = otherUserName.isNotEmpty
                 ? otherUserName[0].toUpperCase()
                 : 'U';

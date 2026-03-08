@@ -25,7 +25,8 @@ class ChatScreenController extends GetxController {
   void initializeChat(String receiverId) async {
     try {
       otherUserId = receiverId;
-      final user = await _firestoreService.getUser(receiverId) ??
+      final user =
+          await _firestoreService.getUser(receiverId) ??
           UserModel(
             id: '',
             email: '',

@@ -27,9 +27,7 @@ class FriendsScreen extends StatelessWidget {
         child: Obx(() {
           if (controller.isLoading.value) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: AppTheme.primaryColor,
-              ),
+              child: CircularProgressIndicator(color: AppTheme.primaryColor),
             );
           }
 
@@ -75,11 +73,8 @@ class FriendsScreen extends StatelessWidget {
 
           return ListView.separated(
             itemCount: controller.friends.length,
-            separatorBuilder: (context, index) => Divider(
-              height: 1,
-              color: AppTheme.borderColor,
-              indent: 76,
-            ),
+            separatorBuilder: (context, index) =>
+                Divider(height: 1, color: AppTheme.borderColor, indent: 76),
             itemBuilder: (context, index) {
               final friend = controller.friends[index];
               final friendInitial = friend.displayName.isNotEmpty
@@ -118,10 +113,7 @@ class FriendsScreen extends StatelessWidget {
                                   ? AppTheme.successColor
                                   : AppTheme.textSecondaryColor,
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Colors.white, width: 2),
                             ),
                           ),
                         ),

@@ -19,19 +19,22 @@ class NotificationService {
   Future<void> initializeNotifications() async {
     try {
       // Request permission for iOS
-      NotificationSettings settings = await _firebaseMessaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
+      NotificationSettings settings = await _firebaseMessaging
+          .requestPermission(
+            alert: true,
+            announcement: false,
+            badge: true,
+            criticalAlert: false,
+            provisional: false,
+            sound: true,
+          );
 
       print('Notification Permission Status: ${settings.authorizationStatus}');
 
       // Handle background messages
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(
+        _firebaseMessagingBackgroundHandler,
+      );
 
       // Handle foreground messages
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -97,10 +100,7 @@ class NotificationService {
     );
   }
 
-  Future<void> sendTestNotification(
-    String title,
-    String body,
-  ) async {
+  Future<void> sendTestNotification(String title, String body) async {
     // In production, this would be called from your backend
     _showLocalNotification(title, body, {});
   }

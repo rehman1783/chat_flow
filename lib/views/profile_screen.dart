@@ -26,9 +26,7 @@ class ProfileScreen extends StatelessWidget {
           if (controller.isLoading.value &&
               controller.userModel.value == null) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: AppTheme.primaryColor,
-              ),
+              child: CircularProgressIndicator(color: AppTheme.primaryColor),
             );
           }
 
@@ -42,18 +40,43 @@ class ProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundColor: AppTheme.primaryColor,
-                        child: Text(
-                          controller.displayName.value.isEmpty
-                              ? 'U'
-                              : controller.displayName.value[0].toUpperCase(),
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                      Obx(
+                        () => Stack(
+                          children: [
+                            CircleAvatar(
+                              radius: 60,
+                              backgroundColor: AppTheme.primaryColor,
+                              child: Text(
+                                controller.displayName.value.isEmpty
+                                    ? 'U'
+                                    : controller.displayName.value[0]
+                                        .toUpperCase(),
+                                style: const TextStyle(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            // Online status indicator
+                            if (controller.userModel.value?.isOnline ?? false)
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.successColor,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 3,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -95,9 +118,9 @@ class ProfileScreen extends StatelessWidget {
                 child: Text(
                   'Account Settings',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textSecondaryColor,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textSecondaryColor,
+                  ),
                 ),
               ),
               Card(
@@ -133,9 +156,9 @@ class ProfileScreen extends StatelessWidget {
                 child: Text(
                   'Danger Zone',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.errorColor,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.errorColor,
+                  ),
                 ),
               ),
               OutlinedButton.icon(

@@ -104,11 +104,8 @@ class FindFriendsScreen extends StatelessWidget {
 
               return ListView.separated(
                 itemCount: displayUsers.length,
-                separatorBuilder: (context, index) => Divider(
-                  height: 1,
-                  color: AppTheme.borderColor,
-                  indent: 76,
-                ),
+                separatorBuilder: (context, index) =>
+                    Divider(height: 1, color: AppTheme.borderColor, indent: 76),
                 itemBuilder: (context, index) {
                   final user = displayUsers[index];
                   final requestSent = controller.hasRequestSent(user.id);
@@ -164,26 +161,64 @@ class FindFriendsScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: requestSent
-                              ? null
-                              : () => controller.sendFriendRequest(user),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: requestSent
-                                ? AppTheme.textSecondaryColor.withOpacity(0.3)
-                                : AppTheme.primaryColor,
-                            minimumSize: const Size(80, 36),
-                          ),
-                          child: Text(
-                            requestSent ? 'Requested' : 'Add',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: requestSent
-                                  ? AppTheme.textSecondaryColor
-                                  : Colors.white,
-                            ),
-                          ),
+                        Obx(
+                          () {
+                            final isFriend = controller.isFriend(user.id);
+                            final requestSent = controller.hasRequestSent(user.id);
+                            
+                            if (isFriend) {
+                              return Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () => Get.toNamed(
+                                      AppRoutes.chat,
+                                      parameters: {'userId': user.id},
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppTheme.primaryColor,
+                                      minimumSize: const Size(60, 36),
+                                    ),
+                                    child: const Icon(Icons.message, size: 18),
+                                  ),
+                                ],
+                              );
+                            } else if (requestSent) {
+                              return ElevatedButton(
+                                onPressed: null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppTheme.textSecondaryColor
+                                      .withOpacity(0.3),
+                                  minimumSize: const Size(90, 36),
+                                ),
+                                child: const Text(
+                                  'Requested',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppTheme.textSecondaryColor,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return ElevatedButton(
+                                onPressed: () =>
+                                    controller.sendFriendRequest(user),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppTheme.primaryColor,
+                                  minimumSize: const Size(70, 36),
+                                ),
+                                child: const Text(
+                                  'Add',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),

@@ -13,6 +13,8 @@ class FindFriendsController extends GetxController {
   final RxString error = ''.obs;
   final RxString searchQuery = ''.obs;
   final RxList<String> sentRequestIds = <String>[].obs;
+  final RxList<String> friendIds = <String>[].obs;
+  final RxMap<String, String> requestStatus = <String, String>{}.obs; // userId -> status (pending/accepted/rejected)
 
   User? get currentUser => _firebaseAuth.currentUser;
 
@@ -49,6 +51,21 @@ class FindFriendsController extends GetxController {
         currentUser!.uid,
       );
       sentRequestIds.value = sentRequests.map((req) => req.receiverId).toList();
+      
+      // Track status of requests
+      for (var req in sentRequests) {
+        requestStatus[req.receiverId] = req.status;
+      }
+      
+      // Load received requests to check for accepted ones
+      final receivedRequests = 
+          await _firestoreService.getReceivedFriendRequests(currentUser!.uid);
+      for (var req in receivedRequests) {
+        if (req.status == 'accepted') {
+          friendIds.add(req.senderId);
+          requestStatus[req.senderId] = 'friends';
+        }
+      }
     } catch (e) {
       print('Error loading sent requests: $e');
     }
@@ -107,5 +124,27 @@ class FindFriendsController extends GetxController {
 
   bool hasRequestSent(String userId) {
     return sentRequestIds.contains(userId);
+  }
+
+  bool isFriend(String userId) {
+    return friendIds.contains(userId);
+  }
+
+  String getRequestStatus(String userId) {
+    return requestStatus[userId] ?? 'none';
+  }
+
+  void markAsAccepted(String userId) {
+    if (sentRequestIds.contains(userId)) {
+      sentRequestIds.remove(userId);
+    }
+    friendIds.add(userId);
+    requestStatus[userId] = 'friends';
+  }
+
+  void resetRequestStatus(String userId) {
+    sentRequestIds.remove(userId);
+    friendIds.remove(userId);
+    requestStatus.remove(userId);
   }
 }

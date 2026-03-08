@@ -19,31 +19,32 @@ class ChatScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
-        title: Obx(
-          () {
-            final user = controller.otherUser.value;
-            if (user == null) {
-              return const Text('Chat');
-            }
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user.displayName.isNotEmpty ? user.displayName : 'Unknown User',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        title: Obx(() {
+          final user = controller.otherUser.value;
+          if (user == null) {
+            return const Text('Chat');
+          }
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                user.displayName.isNotEmpty ? user.displayName : 'Unknown User',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  user.isOnline
-                      ? 'Online'
-                      : 'Last seen ${_formatLastSeen(user.lastSeen)}',
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ],
-            );
-          },
-        ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                user.isOnline
+                    ? 'Online'
+                    : 'Last seen ${_formatLastSeen(user.lastSeen)}',
+                style: const TextStyle(fontSize: 12),
+              ),
+            ],
+          );
+        }),
         centerTitle: false,
       ),
       body: Column(
