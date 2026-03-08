@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chat_flow/controllers/find_friends_controller.dart';
+import 'package:chat_flow/theme/app_theme.dart';
 
 class FindFriendsScreen extends StatelessWidget {
   const FindFriendsScreen({super.key});
@@ -25,10 +26,24 @@ class FindFriendsScreen extends StatelessWidget {
             child: TextField(
               onChanged: controller.searchUsers,
               decoration: InputDecoration(
-                hintText: 'Search users...',
+                hintText: 'Search users by name or email...',
                 prefixIcon: const Icon(Icons.search),
+                suffixIcon: controller.searchQuery.value.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => controller.searchQuery.value = '',
+                      )
+                    : null,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: AppTheme.borderColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(
+                    color: AppTheme.primaryColor,
+                    width: 2,
+                  ),
                 ),
               ),
             ),
@@ -36,7 +51,11 @@ class FindFriendsScreen extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppTheme.primaryColor,
+                  ),
+                );
               }
 
               final displayUsers = controller.searchQuery.value.isEmpty
@@ -44,26 +63,129 @@ class FindFriendsScreen extends StatelessWidget {
                   : controller.searchResults;
 
               if (displayUsers.isEmpty) {
-                return const Center(child: Text('No users found'));
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: AppTheme.backgroundColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Icon(
+                          Icons.person_search,
+                          size: 60,
+                          color: AppTheme.primaryColor.withOpacity(0.3),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'No users found',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimaryColor,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Try searching with different keywords',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.textSecondaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               }
 
-              return ListView.builder(
+              return ListView.separated(
                 itemCount: displayUsers.length,
+                separatorBuilder: (context, index) => Divider(
+                  height: 1,
+                  color: AppTheme.borderColor,
+                  indent: 76,
+                ),
                 itemBuilder: (context, index) {
                   final user = displayUsers[index];
                   final requestSent = controller.hasRequestSent(user.id);
+                  final userInitial = user.displayName.isNotEmpty
+                      ? user.displayName[0].toUpperCase()
+                      : 'U';
 
-                  return ListTile(
-                    leading: CircleAvatar(
-                      child: Text(user.displayName[0].toUpperCase()),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                    title: Text(user.displayName),
-                    subtitle: Text(user.email),
-                    trailing: ElevatedButton(
-                      onPressed: requestSent
-                          ? null
-                          : () => controller.sendFriendRequest(user),
-                      child: Text(requestSent ? 'Requested' : 'Add'),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 28,
+                          backgroundColor: AppTheme.secondaryColor,
+                          child: Text(
+                            userInitial,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user.displayName.isNotEmpty
+                                    ? user.displayName
+                                    : 'Unknown User',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.textPrimaryColor,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                user.email,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: AppTheme.textSecondaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: requestSent
+                              ? null
+                              : () => controller.sendFriendRequest(user),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: requestSent
+                                ? AppTheme.textSecondaryColor.withOpacity(0.3)
+                                : AppTheme.primaryColor,
+                            minimumSize: const Size(80, 36),
+                          ),
+                          child: Text(
+                            requestSent ? 'Requested' : 'Add',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: requestSent
+                                  ? AppTheme.textSecondaryColor
+                                  : Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
