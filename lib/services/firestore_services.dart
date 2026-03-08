@@ -302,6 +302,19 @@ class FirestoreService {
         });
   }
 
+  Stream<List<MessageModel>> getAllMessagesStream(String userId) {
+    return _firestore
+        .collectionGroup('messages')
+        .where('receiverId', isEqualTo: userId)
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((querySnapshot) {
+          return querySnapshot.docs
+              .map((doc) => MessageModel.fromMap(doc.data()))
+              .toList();
+        });
+  }
+
   Future<void> editMessage(
     String chatId,
     String messageId,

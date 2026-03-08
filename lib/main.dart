@@ -1,4 +1,5 @@
 import 'package:chat_flow/controllers/auth_controllers.dart';
+import 'package:chat_flow/controllers/push_notification_controller.dart';
 import 'package:chat_flow/firebase_options.dart';
 import 'package:chat_flow/routes/app_pages.dart';
 import 'package:chat_flow/theme/app_theme.dart';
@@ -10,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   Get.put(AuthController());
+  Get.put(PushNotificationController()); // Initialize push notifications
   runApp(const MyApp());
 }
 
