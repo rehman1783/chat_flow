@@ -19,35 +19,35 @@ class ChatScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
-        title: Obx(() => Text(controller.otherUser.displayName)),
-        centerTitle: true,
+        title: Obx(
+          () {
+            final user = controller.otherUser.value;
+            if (user == null) {
+              return const Text('Chat');
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.displayName.isNotEmpty ? user.displayName : 'Unknown User',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  user.isOnline
+                      ? 'Online'
+                      : 'Last seen ${_formatLastSeen(user.lastSeen)}',
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ],
+            );
+          },
+        ),
+        centerTitle: false,
       ),
       body: Column(
         children: [
-          // Quick access buttons
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            // child: Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     Expanded(
-            //       child: ElevatedButton.icon(
-            //         onPressed: () => Get.toNamed(AppRoutes.friends),
-            //         icon: const Icon(Icons.people),
-            //         label: const Text('View Friends'),
-            //       ),
-            //     ),
-            //     const SizedBox(width: 8),
-            //     Expanded(
-            //       child: ElevatedButton.icon(
-            //         onPressed: () => Get.toNamed(AppRoutes.usersList),
-            //         icon: const Icon(Icons.person_add),
-            //         label: const Text('Find Friends'),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-          ),
           // Messages list
           Expanded(
             child: Obx(() {
@@ -207,6 +207,25 @@ class ChatScreen extends StatelessWidget {
 
   String _formatTime(DateTime dateTime) {
     return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
+  String _formatLastSeen(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inSeconds < 60) {
+      return 'just now';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inDays == 1) {
+      return 'yesterday';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d ago';
+    } else {
+      return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+    }
   }
 
   void _showEditDialog(

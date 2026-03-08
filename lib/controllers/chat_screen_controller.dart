@@ -12,7 +12,7 @@ class ChatScreenController extends GetxController {
 
   late String chatId;
   late String otherUserId;
-  late UserModel otherUser;
+  final Rx<UserModel?> otherUser = Rx<UserModel?>(null);
 
   final RxList<MessageModel> messages = <MessageModel>[].obs;
   final RxBool isLoading = false.obs;
@@ -25,8 +25,7 @@ class ChatScreenController extends GetxController {
   void initializeChat(String receiverId) async {
     try {
       otherUserId = receiverId;
-      otherUser =
-          await _firestoreService.getUser(receiverId) ??
+      final user = await _firestoreService.getUser(receiverId) ??
           UserModel(
             id: '',
             email: '',
@@ -36,6 +35,7 @@ class ChatScreenController extends GetxController {
             lastSeen: DateTime.now(),
             createdAt: DateTime.now(),
           );
+      otherUser.value = user;
 
       chatId = await _firestoreService.getOrCreateChatId(
         currentUser!.uid,
