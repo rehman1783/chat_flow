@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chat_flow/controllers/profile_screen_controller.dart';
 import 'package:chat_flow/routes/app_routes.dart';
+import 'package:chat_flow/theme/app_theme.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -24,38 +25,61 @@ class ProfileScreen extends StatelessWidget {
         child: Obx(() {
           if (controller.isLoading.value &&
               controller.userModel.value == null) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppTheme.primaryColor,
+              ),
+            );
           }
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Profile Header
-              Center(
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      child: Text(
-                        controller.displayName.value.isEmpty
-                            ? 'U'
-                            : controller.displayName.value[0].toUpperCase(),
+              // Profile Header Card
+              Card(
+                elevation: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: AppTheme.primaryColor,
+                        child: Text(
+                          controller.displayName.value.isEmpty
+                              ? 'U'
+                              : controller.displayName.value[0].toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      controller.displayName.value,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      controller.email.value,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+                      Text(
+                        controller.displayName.value.isEmpty
+                            ? 'Unknown User'
+                            : controller.displayName.value,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.textPrimaryColor,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        controller.email.value,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.textSecondaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 24),
 
               // Edit Profile Button
               ElevatedButton.icon(
@@ -63,19 +87,37 @@ class ProfileScreen extends StatelessWidget {
                 icon: const Icon(Icons.edit),
                 label: const Text('Edit Profile'),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
 
-              // Settings & Security
+              // Settings & Security Section
+              Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 12),
+                child: Text(
+                  'Account Settings',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textSecondaryColor,
+                      ),
+                ),
+              ),
               Card(
                 child: Column(
                   children: [
                     ListTile(
+                      leading: const Icon(
+                        Icons.settings_outlined,
+                        color: AppTheme.primaryColor,
+                      ),
                       title: const Text('Account Settings'),
                       trailing: const Icon(Icons.arrow_forward),
                       onTap: () => Get.toNamed(AppRoutes.settings),
                     ),
-                    const Divider(height: 0),
+                    const Divider(height: 0, indent: 56),
                     ListTile(
+                      leading: const Icon(
+                        Icons.lock_outlined,
+                        color: AppTheme.primaryColor,
+                      ),
                       title: const Text('Change Password'),
                       trailing: const Icon(Icons.arrow_forward),
                       onTap: () => Get.toNamed(AppRoutes.settings),
@@ -83,23 +125,37 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 32),
 
-              // Sign Out Button
-              ElevatedButton.icon(
+              // Danger Zone Section
+              Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 12),
+                child: Text(
+                  'Danger Zone',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.errorColor,
+                      ),
+                ),
+              ),
+              OutlinedButton.icon(
                 onPressed: () => _showLogoutDialog(context, controller),
                 icon: const Icon(Icons.logout),
                 label: const Text('Sign Out'),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.orange,
+                  side: const BorderSide(color: Colors.orange),
+                ),
               ),
-              const SizedBox(height: 16),
-
-              // Delete Account Button
-              ElevatedButton.icon(
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
                 onPressed: () => _showDeleteDialog(context, controller),
                 icon: const Icon(Icons.delete),
                 label: const Text('Delete Account'),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppTheme.errorColor,
+                  side: const BorderSide(color: AppTheme.errorColor),
+                ),
               ),
             ],
           );
