@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chat_flow/controllers/chat_screen_controller.dart';
-import 'package:chat_flow/routes/app_routes.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
@@ -28,26 +27,26 @@ class ChatScreen extends StatelessWidget {
           // Quick access buttons
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () => Get.toNamed(AppRoutes.friends),
-                    icon: const Icon(Icons.people),
-                    label: const Text('View Friends'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () => Get.toNamed(AppRoutes.usersList),
-                    icon: const Icon(Icons.person_add),
-                    label: const Text('Find Friends'),
-                  ),
-                ),
-              ],
-            ),
+            // child: Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     Expanded(
+            //       child: ElevatedButton.icon(
+            //         onPressed: () => Get.toNamed(AppRoutes.friends),
+            //         icon: const Icon(Icons.people),
+            //         label: const Text('View Friends'),
+            //       ),
+            //     ),
+            //     const SizedBox(width: 8),
+            //     Expanded(
+            //       child: ElevatedButton.icon(
+            //         onPressed: () => Get.toNamed(AppRoutes.usersList),
+            //         icon: const Icon(Icons.person_add),
+            //         label: const Text('Find Friends'),
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ),
           // Messages list
           Expanded(

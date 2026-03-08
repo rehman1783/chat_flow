@@ -24,7 +24,7 @@ class FirestoreService {
           .doc(userId)
           .get();
       if (doc.exists) {
-        return UserModel.fromMap(doc.data() as Map<String, dynamic>);
+        return UserModel.fromMap(doc.data()!);
       }
       return null;
     } catch (e) {
@@ -36,7 +36,7 @@ class FirestoreService {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('users').get();
       return querySnapshot.docs
-          .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => UserModel.fromMap(doc.data()!))
           .toList();
     } catch (e) {
       throw Exception('Failed to get all users: ${e.toString()}');
@@ -51,7 +51,7 @@ class FirestoreService {
           .where('displayName', isLessThan: query + 'z')
           .get();
       return querySnapshot.docs
-          .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => UserModel.fromMap(doc.data()!))
           .toList();
     } catch (e) {
       throw Exception('Failed to search users: ${e.toString()}');
@@ -151,7 +151,7 @@ class FirestoreService {
       return querySnapshot.docs
           .map(
             (doc) =>
-                FriendRequestModel.fromMap(doc.data() as Map<String, dynamic>),
+                FriendRequestModel.fromMap(doc.data()!),
           )
           .toList();
     } catch (e) {
@@ -170,7 +170,7 @@ class FirestoreService {
       return querySnapshot.docs
           .map(
             (doc) =>
-                FriendRequestModel.fromMap(doc.data() as Map<String, dynamic>),
+                FriendRequestModel.fromMap(doc.data()!),
           )
           .toList();
     } catch (e) {
@@ -383,7 +383,7 @@ class FirestoreService {
           .doc(chatId)
           .get();
       if (doc.exists) {
-        return ChatModel.fromMap(doc.data() as Map<String, dynamic>);
+        return ChatModel.fromMap(doc.data()!);
       }
       return null;
     } catch (e) {
@@ -399,7 +399,7 @@ class FirestoreService {
         .asyncMap((snapshot1) async {
           List<ChatModel> chats1 = snapshot1.docs
               .map(
-                (doc) => ChatModel.fromMap(doc.data() as Map<String, dynamic>),
+                (doc) => ChatModel.fromMap(doc.data()!),
               )
               .toList();
 
@@ -410,7 +410,7 @@ class FirestoreService {
 
           List<ChatModel> chats2 = snapshot2.docs
               .map(
-                (doc) => ChatModel.fromMap(doc.data() as Map<String, dynamic>),
+                (doc) => ChatModel.fromMap(doc.data()!),
               )
               .toList();
 
