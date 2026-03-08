@@ -25,54 +25,49 @@ class MainScreen extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          Obx(
-            () => Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Stack(
-                children: [
-                  Center(
-                    child: IconButton(
-                      icon: const Icon(Icons.notifications_outlined),
-                      iconSize: 24,
-                      onPressed: () => Get.toNamed(AppRoutes.notifications),
-                      tooltip: 'Notifications',
-                    ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Stack(
+              children: [
+                Center(
+                  child: IconButton(
+                    icon: const Icon(Icons.notifications_outlined),
+                    iconSize: 24,
+                    onPressed: () => Get.toNamed(AppRoutes.notifications),
+                    tooltip: 'Notifications',
                   ),
-                  Obx(() {
-                    final count = notificationController.unreadCount.value;
-                    return count > 0
-                        ? Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 5,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppTheme.errorColor,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Text(
-                                count > 99 ? '99+' : count.toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                ),
+                Obx(() {
+                  final count = notificationController.unreadCount.value;
+                  return count > 0
+                      ? Positioned(
+                          right: 0,
+                          top: 0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5,
+                              vertical: 2,
                             ),
-                          )
-                        : SizedBox.shrink();
-                  }),
-                ],
-              ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.errorColor,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.white, width: 2),
+                            ),
+                            child: Text(
+                              count > 99 ? '99+' : count.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                height: 1,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      : SizedBox.shrink();
+                }),
+              ],
             ),
           ),
         ],
