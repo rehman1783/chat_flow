@@ -1,8 +1,8 @@
 import 'package:chat_flow/models/user_model.dart';
 import 'package:chat_flow/services/firestore_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FindFriendsController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
@@ -15,8 +15,7 @@ class FindFriendsController extends GetxController {
   final RxString searchQuery = ''.obs;
   final RxList<String> sentRequestIds = <String>[].obs;
   final RxList<String> friendIds = <String>[].obs;
-  final RxMap<String, String> requestStatus =
-      <String, String>{}.obs; // userId -> status (pending/accepted/rejected)
+  final RxMap<String, String> requestStatus = <String, String>{}.obs;
 
   User? get currentUser => _firebaseAuth.currentUser;
 
@@ -42,7 +41,6 @@ class FindFriendsController extends GetxController {
         isLoading.value = false;
       });
 
-      // requests bhi load karo
       loadSentRequests();
     } catch (e) {
       error.value = e.toString();
@@ -56,16 +54,16 @@ class FindFriendsController extends GetxController {
       final sentRequests = await _firestoreService.getSentFriendRequests(
         currentUser!.uid,
       );
+
       sentRequestIds.value = sentRequests.map((req) => req.receiverId).toList();
 
-      // Track status of requests
       for (var req in sentRequests) {
         requestStatus[req.receiverId] = req.status;
       }
 
-      // Load received requests to check for accepted ones
       final receivedRequests = await _firestoreService
           .getReceivedFriendRequests(currentUser!.uid);
+
       for (var req in receivedRequests) {
         if (req.status == 'accepted') {
           friendIds.add(req.senderId);
@@ -79,6 +77,7 @@ class FindFriendsController extends GetxController {
 
   void searchUsers(String query) {
     searchQuery.value = query;
+
     if (query.isEmpty) {
       searchResults.clear();
     } else {
@@ -102,24 +101,24 @@ class FindFriendsController extends GetxController {
       final currentUserModel = await _firestoreService.getUser(
         currentUser!.uid,
       );
-      if (currentUserModel != null) {
-        await _firestoreService.sendFriendRequest(
-          currentUser!.uid,
-          targetUser.id,
-          currentUserModel.displayName,
-          currentUserModel.email,
-          currentUserModel.photoUrl,
-        );
 
-        // Update sent request IDs
-        sentRequestIds.add(targetUser.id);
+      if (currentUserModel == null) return;
 
-        Get.snackbar(
-          'Success',
-          'Friend request sent to ${targetUser.displayName}',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
+      await _firestoreService.sendFriendRequest(
+        currentUser!.uid,
+        targetUser.id,
+        currentUserModel.displayName,
+        currentUserModel.email,
+        currentUserModel.photoUrl,
+      );
+
+      sentRequestIds.add(targetUser.id);
+
+      Get.snackbar(
+        'Success',
+        'Friend request sent',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     } catch (e) {
       error.value = e.toString();
       Get.snackbar('Error', 'Failed to send friend request');

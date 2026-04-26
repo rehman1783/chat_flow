@@ -135,6 +135,4 @@ class ProfileScreenController extends GetxController {
       isLoading.value = false;
     }
   }
-
-  Future<void> signOut() async {}
 }

@@ -91,4 +91,6 @@ class AuthService {
       throw Exception('Failed to delete account: ${e.toString()}');
     }
   }
+
+  Future<void> logout() async {}
 }
