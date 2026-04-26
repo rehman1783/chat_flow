@@ -24,8 +24,8 @@ class UserModel {
       'displayName': displayName,
       'photoUrl': photoUrl,
       'isOnline': isOnline,
-      'lastSeen': lastSeen,
-      'createdAt': createdAt,
+      'lastSeen': lastSeen.millisecondsSinceEpoch,
+      'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
 

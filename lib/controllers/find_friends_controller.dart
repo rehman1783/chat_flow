@@ -31,16 +31,22 @@ class FindFriendsController extends GetxController {
       error.value = '';
 
       final allUsers = await _firestoreService.getAllUsers();
+      
       // Filter out current user
-      users.value = allUsers
+      final filteredUsers = allUsers
           .where((user) => user.id != currentUser?.uid)
           .toList();
+      
+      users.value = filteredUsers;
+      
+      print('Loaded ${users.length} users');
 
       // Load sent request IDs
       await loadSentRequests();
     } catch (e) {
       error.value = e.toString();
-      Get.snackbar('Error', 'Failed to load users');
+      print('Error loading users: $e');
+      Get.snackbar('Error', 'Failed to load users: $e');
     } finally {
       isLoading.value = false;
     }

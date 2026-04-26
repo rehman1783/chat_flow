@@ -24,8 +24,10 @@ class FirestoreService {
           .doc(userId)
           .get();
       if (doc.exists) {
-        final data = doc.data() as Map<String, dynamic>;
-        return UserModel.fromMap(data);
+        final data = doc.data();
+        if (data != null) {
+          return UserModel.fromMap(data as Map<String, dynamic>);
+        }
       }
       return null;
     } catch (e) {
@@ -36,10 +38,17 @@ class FirestoreService {
   Future<List<UserModel>> getAllUsers() async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('users').get();
-      return querySnapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        return UserModel.fromMap(data);
-      }).toList();
+      return querySnapshot.docs
+          .map((doc) {
+            final data = doc.data();
+            if (data != null) {
+              return UserModel.fromMap(data as Map<String, dynamic>);
+            }
+            return null;
+          })
+          .where((user) => user != null)
+          .cast<UserModel>()
+          .toList();
     } catch (e) {
       throw Exception('Failed to get all users: ${e.toString()}');
     }
@@ -52,10 +61,17 @@ class FirestoreService {
           .where('displayName', isGreaterThanOrEqualTo: query)
           .where('displayName', isLessThan: query + 'z')
           .get();
-      return querySnapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        return UserModel.fromMap(data);
-      }).toList();
+      return querySnapshot.docs
+          .map((doc) {
+            final data = doc.data();
+            if (data != null) {
+              return UserModel.fromMap(data as Map<String, dynamic>);
+            }
+            return null;
+          })
+          .where((user) => user != null)
+          .cast<UserModel>()
+          .toList();
     } catch (e) {
       throw Exception('Failed to search users: ${e.toString()}');
     }
@@ -410,20 +426,26 @@ class FirestoreService {
         .where('user1Id', isEqualTo: userId)
         .snapshots()
         .asyncMap((snapshot1) async {
-          List<ChatModel> chats1 = snapshot1.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            return ChatModel.fromMap(data);
-          }).toList();
+          List<ChatModel> chats1 = [];
+          for (var doc in snapshot1.docs) {
+            if (doc.exists) {
+              // ignore: unnecessary_cast
+              chats1.add(ChatModel.fromMap(doc.data() as Map<String, dynamic>));
+            }
+          }
 
           QuerySnapshot snapshot2 = await _firestore
               .collection('chats')
               .where('user2Id', isEqualTo: userId)
               .get();
 
-          List<ChatModel> chats2 = snapshot2.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            return ChatModel.fromMap(data);
-          }).toList();
+          List<ChatModel> chats2 = [];
+          for (var doc in snapshot2.docs) {
+            if (doc.exists) {
+              // ignore: unnecessary_cast
+              chats2.add(ChatModel.fromMap(doc.data() as Map<String, dynamic>));
+            }
+          }
 
           List<ChatModel> allChats = [...chats1, ...chats2];
           allChats.sort(

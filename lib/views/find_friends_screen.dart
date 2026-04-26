@@ -109,7 +109,6 @@ class FindFriendsScreen extends StatelessWidget {
                     Divider(height: 1, color: AppTheme.borderColor, indent: 76),
                 itemBuilder: (context, index) {
                   final user = displayUsers[index];
-                  final requestSent = controller.hasRequestSent(user.id);
                   final userInitial = user.displayName.isNotEmpty
                       ? user.displayName[0].toUpperCase()
                       : 'U';
