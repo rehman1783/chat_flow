@@ -26,7 +26,7 @@ class FirestoreService {
       if (doc.exists) {
         final data = doc.data();
         if (data != null) {
-          return UserModel.fromMap(data as Map<String, dynamic>);
+          return UserModel.fromMap(data as Map<String, dynamic>, doc.id);
         }
       }
       return null;
@@ -42,7 +42,7 @@ class FirestoreService {
           .map((doc) {
             final data = doc.data();
             if (data != null) {
-              return UserModel.fromMap(data as Map<String, dynamic>);
+              return UserModel.fromMap(data as Map<String, dynamic>, doc.id);
             }
             return null;
           })
@@ -65,7 +65,7 @@ class FirestoreService {
           .map((doc) {
             final data = doc.data();
             if (data != null) {
-              return UserModel.fromMap(data as Map<String, dynamic>);
+              return UserModel.fromMap(data as Map<String, dynamic>, doc.id);
             }
             return null;
           })
@@ -315,6 +315,22 @@ class FirestoreService {
               .map((doc) => MessageModel.fromMap(doc.data()))
               .toList();
         });
+  }
+
+  Stream<List<UserModel>> getAllUsersStream() {
+    return _firestore
+        .collection('users')
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => UserModel.fromMap(
+                  doc.data() as Map<String, dynamic>,
+                  doc.id,
+                ),
+              )
+              .toList(),
+        );
   }
 
   Stream<List<MessageModel>> getAllMessagesStream(String userId) {

@@ -2,6 +2,7 @@ import 'package:chat_flow/models/user_model.dart';
 import 'package:chat_flow/services/firestore_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FindFriendsController extends GetxController {
   final FirestoreService _firestoreService = FirestoreService();
@@ -25,29 +26,27 @@ class FindFriendsController extends GetxController {
     loadAllUsers();
   }
 
-  Future<void> loadAllUsers() async {
+  void loadAllUsers() {
     try {
       isLoading.value = true;
-      error.value = '';
 
-      final allUsers = await _firestoreService.getAllUsers();
-      
-      // Filter out current user
-      final filteredUsers = allUsers
-          .where((user) => user.id != currentUser?.uid)
-          .toList();
-      
-      users.value = filteredUsers;
-      
-      print('Loaded ${users.length} users');
+      _firestoreService.getAllUsersStream().listen((allUsers) {
+        final filteredUsers = allUsers
+            .where((user) => user.id != currentUser?.uid)
+            .toList();
 
-      // Load sent request IDs
-      await loadSentRequests();
+        users.value = filteredUsers;
+
+        print('Loaded ${users.length} users');
+
+        isLoading.value = false;
+      });
+
+      // requests bhi load karo
+      loadSentRequests();
     } catch (e) {
       error.value = e.toString();
-      print('Error loading users: $e');
-      Get.snackbar('Error', 'Failed to load users: $e');
-    } finally {
+      Get.snackbar('Error', 'Failed to load users');
       isLoading.value = false;
     }
   }

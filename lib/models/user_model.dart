@@ -19,7 +19,6 @@ class UserModel {
   });
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'email': email,
       'displayName': displayName,
       'photoUrl': photoUrl,
@@ -29,7 +28,7 @@ class UserModel {
     };
   }
 
-  static UserModel fromMap(Map<String, dynamic> map) {
+  static UserModel fromMap(Map<String, dynamic> map, String docId) {
     DateTime _parseDateTime(dynamic value) {
       if (value is Timestamp) {
         return value.toDate();
@@ -42,7 +41,7 @@ class UserModel {
     }
 
     return UserModel(
-      id: map['id'] ?? '',
+      id: docId, // 🔥 IMPORTANT CHANGE
       email: map['email'] ?? '',
       displayName: map['displayName'] ?? '',
       photoUrl: map['photoUrl'] ?? '',

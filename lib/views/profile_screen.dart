@@ -197,9 +197,9 @@ class ProfileScreen extends StatelessWidget {
       textConfirm: 'Sign Out',
       textCancel: 'Cancel',
       confirmTextColor: Colors.white,
-      onConfirm: () {
-        controller.logout();
+      onConfirm: () async {
         Get.back();
+        await controller.signOut();
       },
     );
   }
@@ -217,8 +217,8 @@ class ProfileScreen extends StatelessWidget {
       textCancel: 'Cancel',
       confirmTextColor: Colors.white,
       buttonColor: Colors.red,
-      onConfirm: () {
-        controller.deleteAccount();
+      onConfirm: () async {
+        await controller.deleteAccount();
         Get.back();
       },
     );

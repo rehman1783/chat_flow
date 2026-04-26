@@ -134,8 +134,6 @@ class AuthController extends GetxController {
 
       await _authService.signOut();
       _userModel.value = null;
-
-      Get.offAllNamed(AppRoutes.login);
     } catch (e) {
       _error.value = e.toString();
       Get.snackbar(
